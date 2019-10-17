@@ -1,9 +1,11 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App" />
+    <HelloWorld :msg="msg" />
     <h3>Knowledge API Token is:</h3>
-    {{ info.data.token }}
+    {{ info }}
+
+    <h3>Message is: {{ msg }}</h3>
   </div>
 </template>
 
@@ -20,10 +22,12 @@ import { generateToken } from "./services/knowledgeAPI";
 })
 export default class App extends Vue {
   public info: any = null;
+  public msg: string = "";
 
   constructor() {
     super();
     this.getToken();
+    this.msg = this.getMsg();
   }
 
   public async getToken(): Promise<void> {
@@ -32,6 +36,10 @@ export default class App extends Vue {
     } catch (e) {
       console.error(e.message);
     }
+  }
+
+  public getMsg(): string {
+    return "HackApp2019";
   }
 }
 </script>
