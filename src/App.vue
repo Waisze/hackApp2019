@@ -2,6 +2,9 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png" />
     <HelloWorld :msg="msg" />
+    <input type="text" :question="question" placeholder="Question" />
+    <input type="text" :answer="answer" placeholder="Answer" />
+    <button v-on:click="submitQnA()">Submit</button>
     <h3>Knowledge API Token is:</h3>
     {{ info }}
 
@@ -13,8 +16,7 @@
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import HelloWorld from "./components/HelloWorld.vue";
 import axios from "axios";
-import { generateToken } from "./services/knowledgeAPI";
-import { createDocument } from "./services/createDocument";
+import { generateToken, createDocument } from "./services/knowledgeAPI";
 
 @Component({
   components: {
@@ -24,6 +26,8 @@ import { createDocument } from "./services/createDocument";
 export default class App extends Vue {
   public info: any = null;
   public msg: string = "";
+  public question: string = "";
+  public answer: string = "";
 
   constructor() {
     super();
@@ -39,12 +43,9 @@ export default class App extends Vue {
     }
   }
 
-  @Watch("info.data.token")
-  public async createDocument(newVal: string, oldVal: string): Promise<void> {
+  public async submitQnA(): Promise<void> {
     try {
-      if (newVal !== oldVal) {
-        await createDocument(newVal, "Q", "A");
-      }
+      await createDocument(this.info.data.token, this.question, this.answer);
     } catch (e) {
       console.error(e.message);
     }
