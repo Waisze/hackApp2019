@@ -42,9 +42,6 @@ export default class App extends Vue {
   @Watch("info.data.token")
   public async createDocument(newVal: string, oldVal: string): Promise<void> {
     try {
-      console.log("Watcher");
-      console.log("newVal", newVal);
-      console.log("oldVal", oldVal);
       if (newVal !== oldVal) {
         await createDocument(newVal, "Q", "A");
       }
