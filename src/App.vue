@@ -10,10 +10,11 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue } from "vue-property-decorator";
+import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import HelloWorld from "./components/HelloWorld.vue";
 import axios from "axios";
 import { generateToken } from "./services/knowledgeAPI";
+import { createDocument } from "./services/createDocument";
 
 @Component({
   components: {
@@ -33,6 +34,20 @@ export default class App extends Vue {
   public async getToken(): Promise<void> {
     try {
       this.info = await generateToken();
+    } catch (e) {
+      console.error(e.message);
+    }
+  }
+
+  @Watch("info.data.token")
+  public async createDocument(newVal: string, oldVal: string): Promise<void> {
+    try {
+      console.log("Watcher");
+      console.log("newVal", newVal);
+      console.log("oldVal", oldVal);
+      if (newVal !== oldVal) {
+        await createDocument(newVal, "Q", "A");
+      }
     } catch (e) {
       console.error(e.message);
     }
