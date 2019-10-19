@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Document } from "../models/api/Document";
 
 const organizationid = "11d49135-912b-4ed5-8330-0ab724d6caca";
 const secretkey = "c0b80a4c-df61-4567-aa98-505e429c4057";
@@ -26,12 +27,12 @@ async function createDocument(
   answer: string
 ): Promise<void> {
   // Create request body:
-  let body = {
+  let body: Document = {
     type: "faq",
     faq: {
       question: question,
       answer: answer,
-      alternatives: []
+      alternatives: [""]
     },
     categories: [
       {

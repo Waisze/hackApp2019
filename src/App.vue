@@ -2,13 +2,16 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png" />
     <HelloWorld :msg="msg" />
-    <input type="text" :question="question" placeholder="Question" />
-    <input type="text" :answer="answer" placeholder="Answer" />
+    <input type="text" v-model="question" placeholder="Question" />
+    <input type="text" v-model="answer" placeholder="Answer" />
     <button v-on:click="submitQnA()">Submit</button>
     <h3>Knowledge API Token is:</h3>
-    {{ info }}
-
-    <h3>Message is: {{ msg }}</h3>
+    {{ info.data.token }}
+    <h3>Search Twitter Hashtags</h3>
+    <input type="text" v-model="hashtag" placeholder="Hashtag" />
+    <button v-on:click="submitHashtag()">Submit</button>
+    <h3>Tweets</h3>
+    {{ tweets || "None yet ;(" }}
   </div>
 </template>
 
@@ -17,6 +20,13 @@ import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import HelloWorld from "./components/HelloWorld.vue";
 import axios from "axios";
 import { generateToken, createDocument } from "./services/knowledgeAPI";
+import {
+  generateTwitterToken,
+  queryTwitterHashtag
+} from "./services/twitterAPI";
+
+import { fetchHomeTimeline } from "twitter-api-ts";
+import * as option from "fp-ts/lib/Option";
 
 @Component({
   components: {
@@ -28,6 +38,8 @@ export default class App extends Vue {
   public msg: string = "";
   public question: string = "";
   public answer: string = "";
+  public hashtag: string = "";
+  public tweets: any = null;
 
   constructor() {
     super();
@@ -39,7 +51,7 @@ export default class App extends Vue {
     try {
       this.info = await generateToken();
     } catch (e) {
-      console.error(e.message);
+      console.error(e.message); // eslint-disable-line
     }
   }
 
@@ -47,7 +59,15 @@ export default class App extends Vue {
     try {
       await createDocument(this.info.data.token, this.question, this.answer);
     } catch (e) {
-      console.error(e.message);
+      console.error(e.message); // eslint-disable-line
+    }
+  }
+
+  public async submitHashtag(): Promise<void> {
+    try {
+      this.tweets = await queryTwitterHashtag(this.hashtag);
+    } catch (e) {
+      console.error(e.message); // eslint-disable-line
     }
   }
 
