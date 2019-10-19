@@ -22,7 +22,7 @@ import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import HelloWorld from "./components/HelloWorld.vue";
 import axios from "axios";
 import { generateToken, createDocument } from "./services/knowledgeAPI";
-import { mockTweets }  from "./mock/mockTweets";
+import { mockTweets } from "./mock/mockTweets";
 import {
   generateTwitterToken,
   queryTwitterHashtag
