@@ -9,7 +9,9 @@
     {{ info.data.token }}
     <h3>Search Twitter Hashtags</h3>
     <input type="text" v-model="hashtag" placeholder="Hashtag" />
-    <button v-on:click="submitHashtag()">Submit</button>
+    <button v-on:click="submitHashtag()" :disabled="buttonDisabled">
+      Submit
+    </button>
     <h3>Tweets</h3>
     {{ tweets || "None yet ;(" }}
   </div>
@@ -25,9 +27,6 @@ import {
   queryTwitterHashtag
 } from "./services/twitterAPI";
 
-import { fetchHomeTimeline } from "twitter-api-ts";
-import * as option from "fp-ts/lib/Option";
-
 @Component({
   components: {
     HelloWorld
@@ -38,8 +37,10 @@ export default class App extends Vue {
   public msg: string = "";
   public question: string = "";
   public answer: string = "";
+  public lastHashtag: string = "";
   public hashtag: string = "";
   public tweets: any = null;
+  public buttonDisabled: boolean = false;
 
   constructor() {
     super();
@@ -65,10 +66,19 @@ export default class App extends Vue {
 
   public async submitHashtag(): Promise<void> {
     try {
-      this.tweets = await queryTwitterHashtag(this.hashtag);
+      this.buttonDisabled = true;
+      this.lastHashtag = this.hashtag;
+      this.tweets = Math.random(); // Saves the remaining requests, instead of calling the actual query function.
+      // this.tweets = await queryTwitterHashtag(this.hashtag);
     } catch (e) {
       console.error(e.message); // eslint-disable-line
     }
+  }
+
+  @Watch("hashtag")
+  onHashtagChanged(currVal: string, oldVal: string) {
+    if (currVal === this.lastHashtag) this.buttonDisabled = true;
+    else this.buttonDisabled = false;
   }
 
   public getMsg(): string {
