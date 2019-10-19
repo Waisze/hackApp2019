@@ -13,7 +13,12 @@
       Submit
     </button>
     <h3>Tweets</h3>
-    {{ tweets || "None yet ;(" }}
+    <div v-if="tweets">
+      <div v-for="(tweet, index) in tweets.statuses" :key="index">
+        {{ tweet.text }}
+      </div>
+    </div>
+    <div v-else>None yet ;(</div>
   </div>
 </template>
 
