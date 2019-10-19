@@ -22,6 +22,7 @@ import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import HelloWorld from "./components/HelloWorld.vue";
 import axios from "axios";
 import { generateToken, createDocument } from "./services/knowledgeAPI";
+import { mockTweets }  from "./mock/mockTweets";
 import {
   generateTwitterToken,
   queryTwitterHashtag
@@ -68,8 +69,8 @@ export default class App extends Vue {
     try {
       this.buttonDisabled = true;
       this.lastHashtag = this.hashtag;
-      this.tweets = Math.random(); // Saves the remaining requests, instead of calling the actual query function.
-      // this.tweets = await queryTwitterHashtag(this.hashtag);
+      this.tweets = mockTweets; // Saves the remaining requests, instead of calling the actual query function.
+      //this.tweets = await queryTwitterHashtag(this.hashtag);
     } catch (e) {
       console.error(e.message); // eslint-disable-line
     }
