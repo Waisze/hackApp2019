@@ -54,4 +54,17 @@ async function createDocument(
   );
 }
 
-export { generateToken, createDocument };
+async function trainKnowledgebase(token: string) {
+  let headers = {
+    "Content-Type": "application/json",
+    organizationid: organizationid,
+    token: token
+  };
+  return axios.post(
+    `${endpoint}/knowledgebases/${knowledgebaseId}/languages/${languageCode}/trainings`,
+    {},
+    { headers }
+  );
+}
+
+export { generateToken, createDocument, trainKnowledgebase };

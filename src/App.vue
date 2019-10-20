@@ -2,23 +2,19 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png" />
     <HelloWorld :msg="msg" />
-    <input type="text" v-model="question" placeholder="Question" />
-    <input type="text" v-model="answer" placeholder="Answer" />
-    <button v-on:click="submitQnA()">Submit</button>
     <h3>Knowledge API Token is:</h3>
     {{ info.data.token }}
     <h3>Search Twitter Hashtags</h3>
     <input type="text" v-model="hashtag" placeholder="Hashtag" />
-    <button v-on:click="submitHashtag()" :disabled="buttonDisabled">
-      Submit
-    </button>
+    <button v-on:click="submitHashtag()" :disabled="buttonDisabled">Submit</button>
     <h3>Tweets</h3>
-    <div v-if="tweets">
+    <!-- <div v-if="tweets">
       <div v-for="(tweet, index) in tweets.statuses" :key="index">
         {{ tweet.text }}
       </div>
-    </div>
-    <div v-else>None yet ;(</div>
+    </div>-->
+    {{ tweets }}
+    <!-- <div v-else>None yet ;(</div> -->
   </div>
 </template>
 
@@ -26,11 +22,12 @@
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import HelloWorld from "./components/HelloWorld.vue";
 import axios from "axios";
-import { generateToken, createDocument } from "./services/knowledgeAPI";
+import { generateToken, createDocument, trainKnowledgebase } from "./services/knowledgeAPI";
 import { mockTweets } from "./mock/mockTweets";
 import {
   generateTwitterToken,
-  queryTwitterHashtag
+  queryTwitterHashtag,
+  getTweetById
 } from "./services/twitterAPI";
 
 @Component({
@@ -41,12 +38,11 @@ import {
 export default class App extends Vue {
   public info: any = null;
   public msg: string = "";
-  public question: string = "";
-  public answer: string = "";
   public lastHashtag: string = "";
   public hashtag: string = "";
-  public tweets: any = null;
+  public tweets: any = [];
   public buttonDisabled: boolean = false;
+  public collectionQnA: any = []; // Each item (object) would have two keys: question and answer
 
   constructor() {
     super();
@@ -62,24 +58,23 @@ export default class App extends Vue {
     }
   }
 
-  public async submitQnA(): Promise<void> {
+  public async submitHashtag(): Promise<any> {
     try {
-      await createDocument(this.info.data.token, this.question, this.answer);
+      this.buttonDisabled = true;
+      this.lastHashtag = this.hashtag;
+      // this.tweets = mockTweets; // Saves the remaining requests, instead of calling the actual query function.
+      const resTweets = await queryTwitterHashtag(this.hashtag);
+      this.tweets = resTweets.data.statuses;
     } catch (e) {
       console.error(e.message); // eslint-disable-line
     }
   }
 
-  public async submitHashtag(): Promise<void> {
-    try {
-      this.buttonDisabled = true;
-      this.lastHashtag = this.hashtag;
-      this.tweets = mockTweets; // Saves the remaining requests, instead of calling the actual query function.
-      //this.tweets = await queryTwitterHashtag(this.hashtag);
-    } catch (e) {
-      console.error(e.message); // eslint-disable-line
-    }
-  }
+/* 
+  TODO:
+  submitHashtag() -> for each tweet in this.tweets, call getTwitterById() -> set Q & A and then update collectionQnA
+  -> for each object in collectionQnA, call createDocument() -> call trainKnowledgebase() -> search
+*/
 
   @Watch("hashtag")
   onHashtagChanged(currVal: string, oldVal: string) {

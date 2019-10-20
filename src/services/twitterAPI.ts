@@ -17,12 +17,11 @@ async function generateTwitterToken(): Promise<void> {
   );
 }
 
-async function queryTwitterHashtag(search: string): Promise<void> {
+async function queryTwitterHashtag(search: string): Promise<any> {
   const headers = {
     Authorization:
       "Bearer AAAAAAAAAAAAAAAAAAAAADKSAQEAAAAAXu54A7t7dlTFTMMjYzQu%2FmF6ajM%3DbmLWjVB3EkLTNAs7BfVcgI9S7vXNwlGneeX9r509UnUjJNktmN"
   };
-
   return axios.get(
     "https://cors-anywhere.herokuapp.com/https://api.twitter.com/1.1/search/tweets.json?q=%23" +
       search +
@@ -31,4 +30,15 @@ async function queryTwitterHashtag(search: string): Promise<void> {
   );
 }
 
-export { generateTwitterToken, queryTwitterHashtag };
+async function getTweetById(id: string): Promise<any> {
+  const headers = {
+    Authorization:
+      "Bearer AAAAAAAAAAAAAAAAAAAAADKSAQEAAAAAXu54A7t7dlTFTMMjYzQu%2FmF6ajM%3DbmLWjVB3EkLTNAs7BfVcgI9S7vXNwlGneeX9r509UnUjJNktmN"
+  };
+  return axios.get(
+    `https://cors-anywhere.herokuapp.com/https://api.twitter.com/1.1/statuses/show.json/id=${id}`,
+    { headers }
+  );
+}
+
+export { generateTwitterToken, queryTwitterHashtag, getTweetById };
