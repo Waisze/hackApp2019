@@ -6,7 +6,9 @@
     <input type="text" v-model="answer" placeholder="Answer" />
     <button v-on:click="submitQnA()">Submit</button>
     <h3>Knowledge API Token is:</h3>
-    {{ info.data.token }}
+    <div v-if="info">
+      {{ info.data.token }}
+    </div>
     <h3>Search Twitter Hashtags</h3>
     <input type="text" v-model="hashtag" placeholder="Hashtag" />
     <button v-on:click="submitHashtag()">
@@ -27,7 +29,11 @@
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import HelloWorld from "./components/HelloWorld.vue";
 import axios from "axios";
-import { generateToken, createDocument } from "./services/knowledgeAPI";
+import {
+  generateToken,
+  createDocument,
+  createBulkTwitterDocument
+} from "./services/knowledgeAPI";
 import { mockTweets } from "./mock/mockTweets";
 import {
   generateTwitterToken,
@@ -65,7 +71,12 @@ export default class App extends Vue {
 
   public async submitQnA(): Promise<void> {
     try {
-      await createDocument(this.info.data.token, this.question, this.answer);
+      await createDocument(
+        this.info.data.token,
+        this.question,
+        this.answer,
+        ""
+      );
     } catch (e) {
       console.error(e.message); // eslint-disable-line
     }
@@ -75,6 +86,7 @@ export default class App extends Vue {
     try {
       //this.tweets = mockTweets; // Saves the remaining requests, instead of calling the actual query function.
       this.tweets = await queryTwitterHashtag(this.hashtag);
+      await createBulkTwitterDocument(this.tweets.data.statuses);
     } catch (e) {
       console.error(e.message); // eslint-disable-line
     }

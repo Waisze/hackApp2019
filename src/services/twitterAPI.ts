@@ -26,7 +26,7 @@ async function queryTwitterHashtag(search: string): Promise<void> {
   return axios.get(
     "https://cors-anywhere.herokuapp.com/https://api.twitter.com/1.1/search/tweets.json?q=%23" +
       search +
-      " -filter:retweets&src=typed_query&count=100&tweet_mode=extended&lang=en",
+      " -filter:retweets&src=typed_query&count=10&tweet_mode=extended&lang=en",
     { headers }
   );
 }
