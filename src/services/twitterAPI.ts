@@ -17,7 +17,7 @@ async function generateTwitterToken(): Promise<void> {
   );
 }
 
-async function queryTwitterHashtag(search: string): Promise<void> {
+async function queryTwitterHashtag(search: string, numberOfTweets: number): Promise<void> {
   const headers = {
     Authorization:
       "Bearer AAAAAAAAAAAAAAAAAAAAADKSAQEAAAAAXu54A7t7dlTFTMMjYzQu%2FmF6ajM%3DbmLWjVB3EkLTNAs7BfVcgI9S7vXNwlGneeX9r509UnUjJNktmN"
@@ -26,7 +26,7 @@ async function queryTwitterHashtag(search: string): Promise<void> {
   return axios.get(
     "https://cors-anywhere.herokuapp.com/https://api.twitter.com/1.1/search/tweets.json?q=%23" +
       search +
-      " -filter:retweets&src=typed_query&count=10&tweet_mode=extended&lang=en",
+      " -filter:retweets&src=typed_query&count=" + numberOfTweets + "&tweet_mode=extended&lang=en",
     { headers }
   );
 }

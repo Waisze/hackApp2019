@@ -6,9 +6,8 @@ const secretkey = "c0b80a4c-df61-4567-aa98-505e429c4057";
 
 const endpoint = "https://api.genesysappliedresearch.com/v2/knowledge";
 const languageCode = "en-US";
-const knowledgebaseId = "d34916c4-48c6-44b1-9dd6-db598855c976";
-const token =
-  "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJvcmdJZCI6IjExZDQ5MTM1LTkxMmItNGVkNS04MzMwLTBhYjcyNGQ2Y2FjYSIsImV4cCI6MTU3MTU1OTg3NiwiaWF0IjoxNTcxNTU2Mjc2fQ.NXmJ-3d0TmZre5rL68JJodcpNydnW4kmr4_sl24j1IY";
+const knowledgebaseId = "78b22146-e2d9-4a74-89ac-d046fee42802";
+
 async function generateToken(): Promise<void> {
   const headers = {
     organizationid: organizationid,
@@ -49,7 +48,10 @@ async function createDocument(
   );
 }
 
-async function createBulkTwitterDocument(tweets: any) {
+async function createBulkTwitterDocument(
+	tweets: any,
+	token: string 
+) {
   let bulkBody: Document[] = [];
   tweets.forEach((tweet: any, index: number): void => {
     //remove special characters and newlines

@@ -1,27 +1,37 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld :msg="msg" />
-    <input type="text" v-model="question" placeholder="Question" />
-    <input type="text" v-model="answer" placeholder="Answer" />
-    <button v-on:click="submitQnA()">Submit</button>
-    <h3>Knowledge API Token is:</h3>
-    <div v-if="info">
-      {{ info.data.token }}
+    <div class="start">
+      <h1>TwitLive</h1>
+      <!-- <input type="text" v-model="question" placeholder="Question" />
+      <input type="text" v-model="answer" placeholder="Answer" /> -->
+      <!-- <button v-on:click="submitQnA()">Submit</button>
+      <h3>Knowledge API Token is:</h3>
+      <div v-if="info">
+        {{ info.data.token }}
+      </div> -->
+      <h3>Train AI on Twitter Hashtags</h3>
+      <input type="text" v-model="hashtag" placeholder="Hashtag" />
+      <input type="text" v-model="numberOfTweets" placeholder="How many tweets?" />
+      <button v-on:click="submitHashtag()">
+        Train
+      </button>
     </div>
-    <h3>Search Twitter Hashtags</h3>
-    <input type="text" v-model="hashtag" placeholder="Hashtag" />
-    <button v-on:click="submitHashtag()">
-      Submit
-    </button>
-    <h3>Tweets</h3>
-    <!-- {{ tweets }} -->
-    <div v-if="tweets">
-      <div v-for="(tweet, index) in tweets.data.statuses" :key="index">
-        {{ tweet.full_text }}
+    <div class="tweets" v-if="tweets">
+      <h1>Tweets</h1>
+      <div>
+        <div class="tweet" v-for="(tweet, index) in tweets.data.statuses" :key="index">
+          {{ tweet.full_text }}
+        </div>
       </div>
     </div>
-    <div v-else>None yet ;(</div>
+    <div v-else>Search a #Hashtag to Start</div>
+    <div class="askMe" v-if="tweets">
+      <h1>Ask me what I've learned</h1>
+      <input type="text" v-model="questionTrainedModel" placeholder="Ask me anything" />
+      <button v-on:click="submitQuestion()">
+        Submit
+      </button>
+    </div>
   </div>
 </template>
 
@@ -53,12 +63,12 @@ export default class App extends Vue {
   public lastHashtag: string = "";
   public hashtag: string = "";
   public tweets: any = null;
-  public buttonDisabled: boolean = false;
+  public numberOfTweets: any = "";
+  public questionTrainedModel: string = "";
 
   constructor() {
     super();
     this.getToken();
-    this.msg = this.getMsg();
   }
 
   public async getToken(): Promise<void> {
@@ -85,32 +95,75 @@ export default class App extends Vue {
   public async submitHashtag(): Promise<void> {
     try {
       //this.tweets = mockTweets; // Saves the remaining requests, instead of calling the actual query function.
-      this.tweets = await queryTwitterHashtag(this.hashtag);
-      await createBulkTwitterDocument(this.tweets.data.statuses);
+      this.tweets = await queryTwitterHashtag(this.hashtag, parseInt(this.numberOfTweets));
+      await createBulkTwitterDocument(this.tweets.data.statuses, this.info.data.token);
+
+      setTimeout(function(){ 
+        window.scrollTo({
+          top: 6000,
+          left: 0,
+          behavior: 'smooth'
+        });
+      }, 2000); 
     } catch (e) {
       console.error(e.message); // eslint-disable-line
     }
   }
 
-  // @Watch("hashtag")
-  // onHashtagChanged(currVal: string, oldVal: string) {
-  //   if (currVal === this.lastHashtag) this.buttonDisabled = true;
-  //   else this.buttonDisabled = false;
-  // }
-
-  public getMsg(): string {
-    return "HackApp2019";
+  public async submitQuestion(): Promise<void> {
+    try {
+      //this.tweets = mockTweets; // Saves the remaining requests, instead of calling the actual query function.
+      this.tweets = await queryTwitterHashtag(this.hashtag, parseInt(this.numberOfTweets));
+    } catch (e) {
+      console.error(e.message); // eslint-disable-line
+    }
   }
 }
 </script>
 
 <style>
+body {
+  height:100vh;
+  margin: 0;
+}
+
+button {
+  height: 35px;
+}
+
+input {
+  height: 30px;
+  width: 8%;
+  margin-right:10px;
+}
+
 #app {
+  height:100%;
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin: 0;
+  background-image: url(./assets/background.jpg);
+}
+
+.start {
+  height:800px;
+  padding-top:350px;
+}
+
+.tweet {
+  width: 500px;
+  height: 70px;
+  background: #d8d8d8;
+  padding: 50px;
+  border-radius: 50px;
+  margin: 20px auto;
+}
+
+.askMe {
+  margin-top:500px;
+  height:600px;
 }
 </style>
