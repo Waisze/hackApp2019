@@ -9,13 +9,14 @@
     {{ info.data.token }}
     <h3>Search Twitter Hashtags</h3>
     <input type="text" v-model="hashtag" placeholder="Hashtag" />
-    <button v-on:click="submitHashtag()" :disabled="buttonDisabled">
+    <button v-on:click="submitHashtag()">
       Submit
     </button>
     <h3>Tweets</h3>
+    <!-- {{ tweets }} -->
     <div v-if="tweets">
-      <div v-for="(tweet, index) in tweets.statuses" :key="index">
-        {{ tweet.text }}
+      <div v-for="(tweet, index) in tweets.data.statuses" :key="index">
+        {{ tweet.full_text }}
       </div>
     </div>
     <div v-else>None yet ;(</div>
@@ -72,20 +73,18 @@ export default class App extends Vue {
 
   public async submitHashtag(): Promise<void> {
     try {
-      this.buttonDisabled = true;
-      this.lastHashtag = this.hashtag;
-      this.tweets = mockTweets; // Saves the remaining requests, instead of calling the actual query function.
-      //this.tweets = await queryTwitterHashtag(this.hashtag);
+      //this.tweets = mockTweets; // Saves the remaining requests, instead of calling the actual query function.
+      this.tweets = await queryTwitterHashtag(this.hashtag);
     } catch (e) {
       console.error(e.message); // eslint-disable-line
     }
   }
 
-  @Watch("hashtag")
-  onHashtagChanged(currVal: string, oldVal: string) {
-    if (currVal === this.lastHashtag) this.buttonDisabled = true;
-    else this.buttonDisabled = false;
-  }
+  // @Watch("hashtag")
+  // onHashtagChanged(currVal: string, oldVal: string) {
+  //   if (currVal === this.lastHashtag) this.buttonDisabled = true;
+  //   else this.buttonDisabled = false;
+  // }
 
   public getMsg(): string {
     return "HackApp2019";
