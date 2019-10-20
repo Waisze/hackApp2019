@@ -1388,7 +1388,8 @@ const mockTweets = {
               id_str: "1185784713073479680",
               indices: [269, 292],
               media_url: "http://pbs.twimg.com/media/EHTA6frVUAAaGB9.jpg",
-              media_url_https: "https://pbs.twimg.com/media/EHTA6frVUAAaGB9.jpg",
+              media_url_https:
+                "https://pbs.twimg.com/media/EHTA6frVUAAaGB9.jpg",
               url: "https://t.co/xSZyOJ5so6",
               display_url: "pic.twitter.com/xSZyOJ5so6",
               expanded_url:
@@ -1426,7 +1427,8 @@ const mockTweets = {
               id_str: "1185784713073479680",
               indices: [269, 292],
               media_url: "http://pbs.twimg.com/media/EHTA6frVUAAaGB9.jpg",
-              media_url_https: "https://pbs.twimg.com/media/EHTA6frVUAAaGB9.jpg",
+              media_url_https:
+                "https://pbs.twimg.com/media/EHTA6frVUAAaGB9.jpg",
               url: "https://t.co/xSZyOJ5so6",
               display_url: "pic.twitter.com/xSZyOJ5so6",
               expanded_url:

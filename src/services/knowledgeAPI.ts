@@ -48,10 +48,7 @@ async function createDocument(
   );
 }
 
-async function createBulkTwitterDocument(
-	tweets: any,
-	token: string 
-) {
+async function createBulkTwitterDocument(tweets: any, token: string) {
   let bulkBody: Document[] = [];
   tweets.forEach((tweet: any, index: number): void => {
     //remove special characters and newlines
@@ -76,7 +73,7 @@ async function createBulkTwitterDocument(
     };
     bulkBody.push(body);
   });
-  
+
   let headers = {
     "Content-Type": "application/json",
     organizationid: organizationid,

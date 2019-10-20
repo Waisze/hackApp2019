@@ -11,7 +11,11 @@
       </div> -->
       <h3>Train AI on Twitter Hashtags</h3>
       <input type="text" v-model="hashtag" placeholder="Hashtag" />
-      <input type="text" v-model="numberOfTweets" placeholder="How many tweets?" />
+      <input
+        type="text"
+        v-model="numberOfTweets"
+        placeholder="How many tweets?"
+      />
       <button v-on:click="submitHashtag()">
         Train
       </button>
@@ -19,7 +23,11 @@
     <div class="tweets" v-if="tweets">
       <h1>Tweets</h1>
       <div>
-        <div class="tweet" v-for="(tweet, index) in tweets.data.statuses" :key="index">
+        <div
+          class="tweet"
+          v-for="(tweet, index) in tweets.data.statuses"
+          :key="index"
+        >
           {{ tweet.full_text }}
         </div>
       </div>
@@ -27,7 +35,11 @@
     <div v-else>Search a #Hashtag to Start</div>
     <div class="askMe" v-if="tweets">
       <h1>Ask me what I've learned</h1>
-      <input type="text" v-model="questionTrainedModel" placeholder="Ask me anything" />
+      <input
+        type="text"
+        v-model="questionTrainedModel"
+        placeholder="Ask me anything"
+      />
       <button v-on:click="submitQuestion()">
         Submit
       </button>
@@ -97,47 +109,47 @@ export default class App extends Vue {
   public async submitHashtag(): Promise<void> {
     try {
       //this.tweets = mockTweets; // Saves the remaining requests, instead of calling the actual query function.
-      this.tweets = await queryTwitterHashtag(this.hashtag, parseInt(this.numberOfTweets));
-      await createBulkTwitterDocument(this.tweets.data.statuses, this.info.data.token);
-
-      // setTimeout(function(){ 
-      //   window.scrollTo({
-      //     top: 6000,
-      //     left: 0,
-      //     behavior: 'smooth'
-      //   });
-      // }, 2000); 
+      this.tweets = await queryTwitterHashtag(
+        this.hashtag,
+        parseInt(this.numberOfTweets)
+      );
+      await createBulkTwitterDocument(
+        this.tweets.data.statuses,
+        this.info.data.token
+      );
     } catch (e) {
       console.error(e.message); // eslint-disable-line
     }
   }
 
-  @Watch('tweets')
-  onValueChange(newVal: any, oldVal: any){
-    setTimeout(function(){ 
-        window.scrollTo({
-          top: 6000,
-          left: 0,
-          behavior: 'smooth'
-        });
-      }, 2000);
+  @Watch("tweets")
+  onValueChange(newVal: any, oldVal: any) {
+    setTimeout(function() {
+      window.scrollTo({
+        top: 6000,
+        left: 0,
+        behavior: "smooth"
+      });
+    }, 2000);
   }
-  
+
   public async submitQuestion(): Promise<void> {
     try {
       //this.tweets = mockTweets; // Saves the remaining requests, instead of calling the actual query function.
-      this.tweets = await queryTwitterHashtag(this.hashtag, parseInt(this.numberOfTweets));
+      this.tweets = await queryTwitterHashtag(
+        this.hashtag,
+        parseInt(this.numberOfTweets)
+      );
     } catch (e) {
       console.error(e.message); // eslint-disable-line
     }
-    
   }
 }
 </script>
 
 <style>
 body {
-  height:100vh;
+  height: 100vh;
   margin: 0;
 }
 
@@ -148,11 +160,11 @@ button {
 input {
   height: 30px;
   width: 8%;
-  margin-right:10px;
+  margin-right: 10px;
 }
 
 #app {
-  height:100%;
+  height: 100%;
   font-family: "Avenir", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -163,8 +175,8 @@ input {
 }
 
 .start {
-  height:800px;
-  padding-top:350px;
+  height: 800px;
+  padding-top: 350px;
 }
 
 .tweet {
@@ -177,7 +189,7 @@ input {
 }
 
 .askMe {
-  margin-top:500px;
-  height:600px;
+  margin-top: 500px;
+  height: 600px;
 }
 </style>
