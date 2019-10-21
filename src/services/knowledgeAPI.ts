@@ -6,7 +6,15 @@ const secretkey = "c0b80a4c-df61-4567-aa98-505e429c4057";
 
 const endpoint = "https://api.genesysappliedresearch.com/v2/knowledge";
 const languageCode = "en-US";
-const knowledgebaseId = "78b22146-e2d9-4a74-89ac-d046fee42802";
+
+//Pre-trained kbid
+//const knowledgebaseId = "78b22146-e2d9-4a74-89ac-d046fee42802";
+
+//Empty knowledge
+//const knowledgebaseId = "13576569-d457-4031-afaf-4e16296f5966";
+
+//Test knowledge
+const knowledgebaseId = "0fe5d4e9-0684-4e43-8a0c-0e46f8597230";
 
 async function generateToken(): Promise<void> {
   const headers = {
@@ -18,6 +26,30 @@ async function generateToken(): Promise<void> {
     {}, //empty body
     { headers }
   );
+}
+
+async function searchKB(searchQuery: string, token: string): Promise<void> {
+	//hard coded pretrained model
+	const knowledgebaseIdPre = "78b22146-e2d9-4a74-89ac-d046fee42802";
+
+	const headers = {
+    organizationid: organizationid,
+    token: token
+  };
+	let body = {
+	  "query": searchQuery,
+	  "pageSize": 5,
+	  "pageNumber": 1,
+	  "sortOrder": "string",
+	  "sortBy": "string",
+	  "languageCode":"en-US",
+	  "documentType": "Faq"
+	};
+	return axios.post(
+		"https://api.genesysappliedresearch.com/v2/knowledge/knowledgebases/" + knowledgebaseIdPre + "/search",
+		body,
+		{ headers }
+	)
 }
 
 async function createDocument(
@@ -85,4 +117,5 @@ async function createBulkTwitterDocument(tweets: any, token: string) {
     { headers }
   );
 }
-export { generateToken, createDocument, createBulkTwitterDocument };
+
+export { generateToken, createDocument, createBulkTwitterDocument, searchKB };

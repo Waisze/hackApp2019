@@ -35,14 +35,21 @@
     <div v-else>Search a #Hashtag to Start</div>
     <div class="askMe" v-if="tweets">
       <h1>Ask me what I've learned</h1>
-      <input
-        type="text"
-        v-model="questionTrainedModel"
-        placeholder="Ask me anything"
-      />
-      <button v-on:click="submitQuestion()">
+      <input type="text" v-model="searchQuery" placeholder="Ask me anything" />
+      <button v-on:click="submitSearchQuery()">
         Submit
       </button>
+      <div v-if="searchResult">
+        <div class="tweet">
+          {{ searchResult.data.results[0].faq.answer }}
+          <h4>Find out more here:</h4>
+          <div class="link">
+            <a :href="searchResult.data.results[0].externalUrl">
+              {{ searchResult.data.results[0].externalUrl }}
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -54,7 +61,8 @@ import axios from "axios";
 import {
   generateToken,
   createDocument,
-  createBulkTwitterDocument
+  createBulkTwitterDocument,
+  searchKB
 } from "./services/knowledgeAPI";
 
 import { mockTweets } from "./mock/mockTweets";
@@ -78,7 +86,8 @@ export default class App extends Vue {
   public hashtag: string = "";
   public tweets: any = null;
   public numberOfTweets: any = "";
-  public questionTrainedModel: string = "";
+  public searchQuery: string = "";
+  public searchResult: any = null;
 
   constructor() {
     super();
@@ -108,7 +117,7 @@ export default class App extends Vue {
 
   public async submitHashtag(): Promise<void> {
     try {
-      //this.tweets = mockTweets; // Saves the remaining requests, instead of calling the actual query function.
+      // this.tweets = mockTweets; // Saves the remaining requests, instead of calling the actual query function.
       this.tweets = await queryTwitterHashtag(
         this.hashtag,
         parseInt(this.numberOfTweets)
@@ -133,13 +142,9 @@ export default class App extends Vue {
     }, 2000);
   }
 
-  public async submitQuestion(): Promise<void> {
+  public async submitSearchQuery(): Promise<void> {
     try {
-      //this.tweets = mockTweets; // Saves the remaining requests, instead of calling the actual query function.
-      this.tweets = await queryTwitterHashtag(
-        this.hashtag,
-        parseInt(this.numberOfTweets)
-      );
+      this.searchResult = await searchKB(this.searchQuery, this.info.data.token);
     } catch (e) {
       console.error(e.message); // eslint-disable-line
     }
@@ -176,12 +181,12 @@ input {
 
 .start {
   height: 800px;
-  padding-top: 350px;
+  padding-top: 260px;
 }
 
 .tweet {
   width: 500px;
-  height: 70px;
+  min-height: 70px;
   background: #d8d8d8;
   padding: 50px;
   border-radius: 50px;
@@ -189,7 +194,8 @@ input {
 }
 
 .askMe {
-  margin-top: 500px;
-  height: 600px;
+  padding-top: 500px;
+  height: 460px;
+  background-image: url(./assets/background.jpg);
 }
 </style>
